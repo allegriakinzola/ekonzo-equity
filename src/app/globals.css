@@ -1,26 +1,287 @@
 @import "tailwindcss";
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@import "tw-animate-css";
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-equity-red: var(--equity-red);
+  --color-equity-red-dark: var(--equity-red-dark);
+  --color-equity-black: var(--equity-black);
+  --color-equity-gray: var(--equity-gray);
+  --font-sans: var(--font-montserrat);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  /* Charte Equity BCDC — rouge toit, noir EQUITY, gris BCDC */
+  --equity-red: #a62626;
+  --equity-red-dark: #7f1d1d;
+  --equity-black: #111111;
+  --equity-gray: #58595b;
+  --equity-gray-soft: #8a8b8d;
+
+  --background: #f6f5f4;
+  --foreground: #111111;
+  --card: #ffffff;
+  --muted: #eeeceb;
+  --muted-foreground: #58595b;
+  --border: #ddd9d6;
+  --primary: #a62626;
+  --primary-foreground: #ffffff;
+
+  --eq-radius: 0.85rem;
+  --eq-radius-lg: 1.25rem;
 }
 
 body {
-  background: var(--background);
+  background:
+    radial-gradient(ellipse 90% 55% at 0% -5%, rgba(166, 38, 38, 0.08) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 45% at 100% 0%, rgba(88, 89, 91, 0.06) 0%, transparent 50%),
+    linear-gradient(180deg, #faf9f8 0%, var(--background) 40%);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), "Segoe UI", system-ui, sans-serif;
+}
+
+/* Barre héritage 1909 (rouge | gris) */
+.equity-heritage-bar {
+  display: inline-flex;
+  height: 4px;
+  width: 72px;
+  overflow: hidden;
+  border-radius: 1px;
+}
+.equity-heritage-bar::before,
+.equity-heritage-bar::after {
+  content: "";
+  flex: 1;
+}
+.equity-heritage-bar::before {
+  background: var(--equity-red);
+}
+.equity-heritage-bar::after {
+  background: var(--equity-gray);
+}
+
+/* ── Typographie (modèle login) ─────────────────────────────────────────── */
+.eq-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--equity-red);
+}
+
+.eq-title {
+  font-size: 1.875rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  color: var(--equity-black);
+}
+
+.eq-lead {
+  max-width: 28rem;
+  font-size: 0.875rem;
+  line-height: 1.625;
+  color: var(--equity-gray);
+}
+
+.eq-section-title {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--equity-black);
+}
+
+.eq-section-lead {
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: var(--equity-gray);
+}
+
+/* ── Surfaces ───────────────────────────────────────────────────────────── */
+.eq-panel {
+  border-radius: var(--eq-radius-lg);
+  border: 1px solid var(--border);
+  background: var(--card);
+  padding: 1.25rem 1.35rem;
+  box-shadow: 0 1px 2px rgba(17, 17, 17, 0.04);
+}
+
+.eq-panel-muted {
+  border-radius: var(--eq-radius-lg);
+  border: 1px solid var(--border);
+  background: linear-gradient(160deg, #ffffff 0%, var(--muted) 120%);
+  padding: 1.25rem 1.35rem;
+}
+
+/* ── Boutons ────────────────────────────────────────────────────────────── */
+.eq-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: var(--eq-radius);
+  background: var(--equity-red);
+  padding: 0.7rem 1.15rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: white;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+.eq-btn-primary:hover {
+  background: var(--equity-red-dark);
+}
+.eq-btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.eq-btn-primary:focus-visible {
+  outline: 2px solid var(--equity-red);
+  outline-offset: 2px;
+}
+
+.eq-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: var(--eq-radius);
+  border: 1px solid var(--border);
+  background: white;
+  padding: 0.65rem 1rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--equity-gray);
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+.eq-btn-ghost:hover {
+  border-color: rgba(166, 38, 38, 0.35);
+  color: var(--equity-red);
+}
+.eq-btn-ghost:focus-visible {
+  outline: 2px solid var(--equity-red);
+  outline-offset: 2px;
+}
+
+.eq-link-quiet {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--equity-red);
+  transition: opacity 0.15s ease;
+}
+.eq-link-quiet:hover {
+  opacity: 0.8;
+}
+
+/* ── Champs ─────────────────────────────────────────────────────────────── */
+.eq-field {
+  display: block;
+}
+.eq-field > span {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--equity-black);
+}
+.eq-field input,
+.eq-field select,
+.eq-field textarea {
+  width: 100%;
+  border-radius: var(--eq-radius);
+  border: 1px solid var(--border);
+  background: white;
+  padding: 0.7rem 0.9rem;
+  font-size: 0.875rem;
+  color: var(--equity-black);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.eq-field input::placeholder,
+.eq-field textarea::placeholder {
+  color: var(--equity-gray-soft);
+}
+.eq-field input:focus,
+.eq-field select:focus,
+.eq-field textarea:focus {
+  border-color: var(--equity-red);
+  box-shadow: 0 0 0 3px rgba(166, 38, 38, 0.12);
+}
+
+/* ── Brand panel (auth) ─────────────────────────────────────────────────── */
+.eq-brand-panel {
+  background:
+    radial-gradient(ellipse 80% 60% at 10% 20%, rgba(255, 255, 255, 0.12) 0%, transparent 55%),
+    linear-gradient(155deg, #7f1d1d 0%, #a62626 42%, #5c1414 100%);
+}
+
+.eq-brand-glow {
+  position: absolute;
+  inset: auto -20% -30% auto;
+  width: 70%;
+  height: 70%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.14) 0%, transparent 65%);
+  animation: eq-brand-pulse 8s ease-in-out infinite;
+}
+
+.eq-brand-grid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.12;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.35) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.35) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: linear-gradient(180deg, transparent 0%, black 35%, black 75%, transparent 100%);
+}
+
+@keyframes eq-brand-pulse {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: translate(-4%, -3%) scale(1.06);
+    opacity: 1;
+  }
+}
+
+@keyframes eq-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.eq-reveal {
+  animation: eq-rise 0.55s ease-out both;
+}
+.eq-reveal-delay {
+  animation-delay: 0.08s;
+}
+.eq-reveal-delay-2 {
+  animation-delay: 0.16s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eq-brand-glow,
+  .eq-reveal,
+  .eq-reveal-delay,
+  .eq-reveal-delay-2 {
+    animation: none;
+  }
 }

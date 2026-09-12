@@ -1,0 +1,101 @@
+// Equity BCDC — schéma (simulateur banque partenaire ekonzo)
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Currency {
+  CDF
+  USD
+}
+
+/** Agent back-office banque */
+model StaffUser {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("staff_user")
+}
+
+/** Client internet banking */
+model Customer {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  passwordHash  String
+  fullName      String
+  nom           String   @default("")
+  postnom       String   @default("")
+  prenom        String   @default("")
+  accountNumber String   @unique
+  accountName   String
+  currency      Currency @default(CDF)
+  balance       Decimal  @default(50000000) @db.Decimal(18, 2)
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  authCodes    AuthCode[]
+  accessTokens AccessToken[]
+
+  @@map("customer")
+}
+
+model AuthCode {
+  id          String    @id @default(cuid())
+  codeHash    String    @unique
+  customerId  String
+  clientId    String
+  redirectUri String
+  state       String
+  expiresAt   DateTime
+  usedAt      DateTime?
+  createdAt   DateTime  @default(now())
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@index([customerId])
+  @@map("auth_code")
+}
+
+model AccessToken {
+  id         String    @id @default(cuid())
+  tokenHash  String    @unique
+  customerId String
+  clientId   String
+  expiresAt  DateTime
+  revokedAt  DateTime?
+  createdAt  DateTime  @default(now())
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@index([customerId])
+  @@map("access_token")
+}
+
+/** Intentions de paiement reçues depuis ekonzo (cache local optionnel) */
+model PaymentIntent {
+  id             String    @id @default(cuid())
+  ekonzoToken    String    @unique
+  clientId       String
+  amount         Decimal?  @db.Decimal(18, 2)
+  currency       Currency?
+  productLabel   String?
+  instrumentKind String?
+  accountNumber  String?
+  accountName    String?
+  returnUrl      String?
+  status         String    @default("PENDING")
+  notifyRef      String?
+  paidAt         DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@map("payment_intent")
+}
