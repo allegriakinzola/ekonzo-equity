@@ -3,11 +3,11 @@ import { hash } from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { notifyEkonzoPayment } from "@/lib/ekonzo";
 import { composePersonName, normalizeNamePart } from "@/lib/person-name";
+import { oauthCredentials, usdCdfRate as configUsdCdfRate } from "@/lib/config";
 
 /** Taux USD→CDF (override via USD_CDF_RATE). */
 export function usdCdfRate() {
-  const raw = Number(process.env.USD_CDF_RATE ?? "2850");
-  return Number.isFinite(raw) && raw > 0 ? raw : 2850;
+  return configUsdCdfRate();
 }
 
 /**
@@ -148,7 +148,7 @@ export async function confirmPaymentFromAccount(input: {
       where: { ekonzoToken: input.token },
       create: {
         ekonzoToken: input.token,
-        clientId: process.env.EKONZO_CLIENT_ID ?? "",
+        clientId: oauthCredentials().clientId,
         amount: input.amount,
         currency: input.currency,
         accountNumber: input.accountNumber,

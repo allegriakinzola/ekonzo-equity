@@ -89,12 +89,14 @@ export default async function PortalDashboardPage() {
               automatiquement.
             </p>
           </div>
-          <Link
-            href="/portal/customers"
-            className="eq-btn-primary mt-6 inline-flex w-fit"
-          >
-            Ouvrir un compte →
-          </Link>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Link href="/portal/customers" className="eq-btn-primary inline-flex">
+              Ouvrir un compte →
+            </Link>
+            <Link href="/portal/docs" className="eq-link-quiet self-center">
+              Documentation API →
+            </Link>
+          </div>
         </div>
       </section>
     </div>

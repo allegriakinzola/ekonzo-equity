@@ -89,16 +89,17 @@ async function main() {
     console.log(`     • ${c.email} · compte ${c.accountNumber}`);
   }
   console.log("");
-  console.log("📋 À coller dans ekonzo (PartnerBank EXTERNAL) :");
-  console.log(`   code            = EQUITY`);
+  console.log("📋 Aligné avec PartnerBank ekonzo :");
+  console.log(`   code            = ${process.env.EKONZO_BANK_CODE ?? "BANK_001"}`);
   console.log(`   oauthClientId   = ${clientId}`);
   console.log(`   oauthClientSecret = ${clientSecret}`);
   console.log(`   authorizeUrl    = ${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3001"}/oauth/authorize`);
   console.log(`   tokenUrl        = ${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3001"}/api/oauth/token`);
   console.log(`   userinfoUrl     = ${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3001"}/api/oauth/userinfo`);
+  console.log(`   EKONZO_API_URL  = ${process.env.EKONZO_API_URL ?? "http://localhost:3000"}`);
   console.log("");
   console.log(
-    "   ⚠ Mettez les mêmes EKONZO_CLIENT_ID / EKONZO_CLIENT_SECRET dans equity-bank/.env",
+    "   ⚠ Mettez les mêmes EKONZO_CLIENT_ID / EKONZO_CLIENT_SECRET / EKONZO_BANK_CODE dans equity-bank/.env",
   );
 
   // Affiche un hash factice pour éviter unused import si random used only above

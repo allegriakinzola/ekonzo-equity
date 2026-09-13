@@ -1,28 +1,26 @@
+import { requireEnv, optionalEnv } from "@/lib/env";
+
 export function appUrl() {
-  return (process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3001").replace(
-    /\/$/,
-    "",
-  );
+  return requireEnv("NEXT_PUBLIC_APP_URL").replace(/\/$/, "");
 }
 
 export function ekonzoApiUrl() {
-  return (process.env.EKONZO_API_URL ?? "http://localhost:3000").replace(
-    /\/$/,
-    "",
-  );
+  return requireEnv("EKONZO_API_URL").replace(/\/$/, "");
 }
 
 export function bankCode() {
-  return (process.env.EKONZO_BANK_CODE ?? "EQUITY").toUpperCase();
+  return requireEnv("EKONZO_BANK_CODE").toUpperCase();
 }
 
 export function oauthCredentials() {
-  const clientId = process.env.EKONZO_CLIENT_ID?.trim();
-  const clientSecret = process.env.EKONZO_CLIENT_SECRET?.trim();
-  if (!clientId || !clientSecret) {
-    throw new Error(
-      "EKONZO_CLIENT_ID et EKONZO_CLIENT_SECRET doivent être définis dans .env",
-    );
-  }
-  return { clientId, clientSecret };
+  return {
+    clientId: requireEnv("EKONZO_CLIENT_ID"),
+    clientSecret: requireEnv("EKONZO_CLIENT_SECRET"),
+  };
+}
+
+/** Taux USD→CDF (optionnel ; défaut documenté côté métier si absent). */
+export function usdCdfRate() {
+  const raw = Number(optionalEnv("USD_CDF_RATE") ?? "2850");
+  return Number.isFinite(raw) && raw > 0 ? raw : 2850;
 }

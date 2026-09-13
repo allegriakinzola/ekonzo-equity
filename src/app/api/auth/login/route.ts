@@ -10,20 +10,38 @@ const schema = z.object({
 });
 
 export async function POST(req: NextRequest) {
-  const body = schema.safeParse(await req.json());
-  if (!body.success) {
-    return NextResponse.json({ error: "Données invalides" }, { status: 400 });
+  try {
+    const body = schema.safeParse(await req.json());
+    if (!body.success) {
+      return NextResponse.json({ error: "Données invalides" }, { status: 400 });
+    }
+    const staff = await prisma.staffUser.findUnique({
+      where: { email: body.data.email.trim().toLowerCase() },
+    });
+    if (!staff || !(await compare(body.data.password, staff.passwordHash))) {
+      return NextResponse.json(
+        { error: "Identifiants incorrects" },
+        { status: 401 },
+      );
+    }
+    await setStaffSession(staff.id);
+    return NextResponse.json({
+      ok: true,
+      name: staff.name,
+      email: staff.email,
+    });
+  } catch (e) {
+    const message = e instanceof Error ? e.message : "Erreur serveur";
+    console.error("[auth/login]", message);
+    const status = message.includes("Variable d'environnement") ? 503 : 500;
+    return NextResponse.json(
+      {
+        error:
+          status === 503
+            ? "Configuration serveur incomplète (variables d'environnement)."
+            : "Erreur de connexion à la base de données.",
+      },
+      { status },
+    );
   }
-  const staff = await prisma.staffUser.findUnique({
-    where: { email: body.data.email.trim().toLowerCase() },
-  });
-  if (!staff || !(await compare(body.data.password, staff.passwordHash))) {
-    return NextResponse.json({ error: "Identifiants incorrects" }, { status: 401 });
-  }
-  await setStaffSession(staff.id);
-  return NextResponse.json({
-    ok: true,
-    name: staff.name,
-    email: staff.email,
-  });
 }

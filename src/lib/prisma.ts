@@ -2,7 +2,9 @@ import { PrismaClient } from "@prisma/client";
 import { PrismaNeon } from "@prisma/adapter-neon";
 import { neonConfig } from "@neondatabase/serverless";
 import ws from "ws";
+import { requireEnv } from "@/lib/env";
 
+// Sur certains réseaux (Windows / proxy / serverless), le pipeline TLS Neon échoue.
 neonConfig.webSocketConstructor = ws;
 neonConfig.useSecureWebSocket = true;
 neonConfig.pipelineTLS = false;
@@ -16,15 +18,30 @@ const globalForPrisma = globalThis as unknown as {
   prismaSchemaVersion?: string;
 };
 
+function databaseUrl() {
+  // DATABASE_URL uniquement — jamais de fallback localhost (sinon Neon → wss://localhost/v2).
+  const url = requireEnv("DATABASE_URL");
+  if (!url.startsWith("postgres")) {
+    throw new Error(
+      "DATABASE_URL invalide : doit commencer par postgresql:// ou postgres://",
+    );
+  }
+  return url;
+}
+
 function createPrismaClient() {
+  const connectionString = databaseUrl();
   return new PrismaClient({
     adapter: new PrismaNeon({
-      connectionString: process.env.DATABASE_URL!,
+      connectionString,
       max: 10,
       idleTimeoutMillis: 30_000,
       connectionTimeoutMillis: 10_000,
     }),
-    log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
+    log:
+      process.env.PRISMA_LOG_QUERIES === "1"
+        ? ["query", "error", "warn"]
+        : ["error"],
   });
 }
 

@@ -1,11 +1,12 @@
 import { createHash, createHmac, randomBytes, timingSafeEqual } from "crypto";
 import { cookies } from "next/headers";
+import { requireEnv } from "@/lib/env";
 
 const COOKIE = "equity_staff_session";
 const TTL_MS = 1000 * 60 * 60 * 12;
 
 function secret() {
-  return process.env.SESSION_SECRET ?? "equity-dev-session-secret-change-me";
+  return requireEnv("SESSION_SECRET");
 }
 
 function sign(payload: string) {
