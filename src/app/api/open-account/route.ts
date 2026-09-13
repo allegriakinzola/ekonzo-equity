@@ -55,13 +55,10 @@ const completeSchema = z.object({
 function fail(e: unknown, fallback = "Erreur") {
   const message = e instanceof Error ? e.message : fallback;
   const status =
-    message.includes("existe déjà") || message.includes("déjà utilisé")
-      ? 409
-      : message.includes("invalide") ||
-          message.includes("requis") ||
-          message.includes("expir") ||
-          message.includes("correspondent")
-        ? 400
+    message.includes("SMTP")
+      ? 503
+      : message.includes("existe déjà") || message.includes("déjà utilisé")
+        ? 409
         : 400;
   return NextResponse.json({ error: message }, { status });
 }

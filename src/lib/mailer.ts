@@ -1,10 +1,10 @@
 import nodemailer from "nodemailer";
-import { optionalEnv } from "@/lib/env";
+import { smtpPass, smtpUser } from "@/lib/smtp";
 import { buildOtpEmail } from "./email/otp";
 
 function getTransport() {
-  const user = optionalEnv("SMTP_USER");
-  const pass = optionalEnv("SMTP_PASS");
+  const user = smtpUser();
+  const pass = smtpPass();
   if (!user || !pass) return null;
   return nodemailer.createTransport({
     service: "gmail",
@@ -13,17 +13,21 @@ function getTransport() {
 }
 
 export async function sendOtpEmail(to: string, code: string) {
-  const from = optionalEnv("SMTP_USER");
+  const from = smtpUser();
   const email = buildOtpEmail(code);
 
   console.log(`[OTP EMAIL] → ${to} (open-account) : ${code}`);
 
   const transport = getTransport();
   if (!transport || !from) {
-    if (process.env.NODE_ENV === "production") {
-      throw new Error("SMTP_USER et SMTP_PASS doivent être définis.");
-    }
-    return;
+    const userSet = Boolean(smtpUser());
+    const passSet = Boolean(smtpPass());
+    console.error(
+      `[SMTP] variables absentes au runtime (SMTP_USER=${userSet}, SMTP_PASS=${passSet}). Sur Vercel : Project → Settings → Environment Variables → Production, puis Redeploy.`,
+    );
+    throw new Error(
+      "Envoi du code impossible : SMTP_USER / SMTP_PASS absents sur le serveur. Ajoutez-les dans les Environment Variables Vercel du projet equity (Production), puis redéployez.",
+    );
   }
 
   await transport.sendMail({
