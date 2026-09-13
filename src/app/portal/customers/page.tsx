@@ -15,7 +15,7 @@ export default async function CustomersPage() {
       <PageIntro
         eyebrow="Internet banking"
         title="Clients"
-        description="Ouvrez et gérez les comptes utilisés pour l'OAuth ekonzo et le règlement des titres publics."
+        description="Ouvrez un compte via e-mail, OTP et pièce d'identité, ou supprimez un client existant."
       />
       <CustomersManager initial={rows} />
     </div>

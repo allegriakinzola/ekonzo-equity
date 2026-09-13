@@ -11,7 +11,7 @@ neonConfig.pipelineTLS = false;
 neonConfig.pipelineConnect = false;
 
 /** Incrémenter après changement de schéma pour invalider le singleton HMR en dev */
-const SCHEMA_VERSION = "person-name-parts-v1";
+const SCHEMA_VERSION = "open-account-kyc-v1";
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;

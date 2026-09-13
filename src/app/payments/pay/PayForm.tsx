@@ -10,8 +10,6 @@ export function PayForm({
   token,
   amount,
   currency,
-  productLabel,
-  instrumentKind,
   accountNumber,
   accountName,
   returnUrl,
@@ -88,18 +86,6 @@ export function PayForm({
     <div className="space-y-5">
       {error && <AlertBox>{error}</AlertBox>}
 
-      <div className="rounded-2xl bg-[var(--muted)] p-5">
-        <p className="eq-eyebrow !tracking-[0.14em] !text-[var(--equity-gray)]">
-          Montant à régler
-        </p>
-        <p className="mt-2 text-3xl font-extrabold tabular-nums tracking-tight text-[var(--equity-black)]">
-          {formatAmount(amount, currency)}
-        </p>
-        <p className="mt-2 text-sm text-[var(--equity-gray)]">
-          {instrumentKind} · {productLabel}
-        </p>
-      </div>
-
       <div
         role="tablist"
         aria-label="Mode de paiement"
@@ -129,13 +115,15 @@ export function PayForm({
       </div>
 
       {method === "BANK_ACCOUNT" ? (
-        <div className="space-y-1 text-sm">
-          <p className="text-[var(--equity-gray)]">Compte débité</p>
-          <p className="font-bold text-[var(--equity-black)]">{accountName}</p>
+        <div className="rounded-xl bg-[var(--muted)]/70 p-4 text-sm">
+          <p className="text-xs font-semibold uppercase tracking-wide text-[var(--equity-gray)]">
+            Compte à débiter
+          </p>
+          <p className="mt-1 font-bold text-[var(--equity-black)]">{accountName}</p>
           <p className="font-mono text-xs text-[var(--equity-gray)]">
             {accountNumber}
           </p>
-          <p className="pt-2 text-xs leading-relaxed text-[var(--equity-gray)]">
+          <p className="mt-2 text-xs leading-relaxed text-[var(--equity-gray)]">
             Si la devise du compte diffère du titre, le montant est converti
             automatiquement au débit.
           </p>
@@ -167,9 +155,7 @@ export function PayForm({
       >
         {loading
           ? "Traitement…"
-          : method === "MOBILE_MONEY"
-            ? "Payer par Mobile Money"
-            : "Confirmer le paiement"}
+          : `Payer ${formatAmount(amount, currency)}`}
       </button>
     </div>
   );

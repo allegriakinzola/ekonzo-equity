@@ -2,12 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  BookOpenIcon,
-  HouseIcon,
-  UsersThreeIcon,
-  XIcon,
-} from "@phosphor-icons/react";
+import { HouseIcon, UsersThreeIcon, XIcon } from "@phosphor-icons/react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { cn } from "@/lib/utils";
 import { PORTAL_NAV, type NavItem } from "./nav";
@@ -15,7 +10,6 @@ import { PORTAL_NAV, type NavItem } from "./nav";
 const ICONS: Record<NavItem["icon"], React.ReactNode> = {
   dashboard: <HouseIcon className="size-5" weight="duotone" aria-hidden />,
   customers: <UsersThreeIcon className="size-5" weight="duotone" aria-hidden />,
-  docs: <BookOpenIcon className="size-5" weight="duotone" aria-hidden />,
 };
 
 function NavLink({

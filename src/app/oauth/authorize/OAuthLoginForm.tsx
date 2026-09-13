@@ -1,8 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { EyeIcon, EyeSlashIcon, LockKeyIcon } from "@phosphor-icons/react";
+import Link from "next/link";
+import {
+  EyeIcon,
+  EyeSlashIcon,
+  LockKeyIcon,
+  UserPlusIcon,
+} from "@phosphor-icons/react";
 import { AlertBox } from "@/components/ui/AlertBox";
+import { openAccountFromOauthPath } from "@/lib/oauth-continue";
 
 export function OAuthLoginForm({
   clientId,
@@ -18,6 +25,12 @@ export function OAuthLoginForm({
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const openAccountHref = openAccountFromOauthPath({
+    clientId,
+    redirectUri,
+    state,
+  });
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -99,6 +112,27 @@ export function OAuthLoginForm({
         <LockKeyIcon className="size-4" weight="bold" aria-hidden />
         {loading ? "Autorisation…" : "Autoriser et continuer"}
       </button>
+
+      <div className="relative py-1">
+        <div className="absolute inset-0 flex items-center" aria-hidden>
+          <span className="w-full border-t border-[var(--border)]" />
+        </div>
+        <p className="relative mx-auto w-fit bg-white px-3 text-[11px] font-semibold tracking-wide text-[var(--equity-gray)] uppercase">
+          ou
+        </p>
+      </div>
+
+      <Link
+        href={openAccountHref}
+        className="eq-btn-ghost w-full justify-center py-3.5 text-[15px]"
+      >
+        <UserPlusIcon className="size-4" weight="bold" aria-hidden />
+        Créer un compte bancaire
+      </Link>
+      <p className="text-center text-xs text-[var(--equity-gray)]">
+        Pas encore de compte internet banking ? Ouvrez-en un, puis ekonzo sera
+        autorisé automatiquement.
+      </p>
     </form>
   );
 }

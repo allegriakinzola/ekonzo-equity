@@ -25,7 +25,7 @@ export default async function AuthorizePage({
       <PageIntro
         eyebrow="Internet banking"
         title="Connexion"
-        description="Identifiez-vous pour autoriser la liaison de votre compte Equity BCDC."
+        description="Identifiez-vous ou créez un compte internet banking pour autoriser la liaison avec ekonzo."
       />
 
       <div className="eq-reveal eq-reveal-delay mt-8">

@@ -12,12 +12,14 @@ export function AuthLayout({
   brandEyebrow = "Depuis 1909 · République démocratique du Congo",
   children,
   className,
+  wide,
 }: {
   brandTitle: string;
   brandText: string;
   brandEyebrow?: string;
   children: React.ReactNode;
   className?: string;
+  wide?: boolean;
 }) {
   return (
     <main
@@ -53,7 +55,7 @@ export function AuthLayout({
       </section>
 
       <section className="relative flex flex-col justify-center px-6 py-12 sm:px-10 lg:px-16">
-        <div className="mx-auto w-full max-w-[400px]">
+          <div className={cn("mx-auto w-full", wide ? "max-w-lg" : "max-w-[400px]")}>
           <div className="mb-8 lg:hidden">
             <BrandLogo size="md" priority />
             <div className="equity-heritage-bar mt-4" />

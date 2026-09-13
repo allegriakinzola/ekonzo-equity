@@ -2,7 +2,7 @@ export type NavItem = {
   href: string;
   label: string;
   exact?: boolean;
-  icon: "dashboard" | "customers" | "docs";
+  icon: "dashboard" | "customers";
 };
 
 export type NavSection = {
@@ -21,7 +21,6 @@ export const PORTAL_NAV: NavSection[] = [
         exact: true,
       },
       { href: "/portal/customers", label: "Clients", icon: "customers" },
-      { href: "/portal/docs", label: "Documentation", icon: "docs" },
     ],
   },
 ];

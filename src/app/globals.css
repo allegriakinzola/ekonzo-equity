@@ -163,6 +163,10 @@ body {
   border-color: rgba(166, 38, 38, 0.35);
   color: var(--equity-red);
 }
+.eq-btn-ghost:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 .eq-btn-ghost:focus-visible {
   outline: 2px solid var(--equity-red);
   outline-offset: 2px;

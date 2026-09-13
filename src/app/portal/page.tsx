@@ -85,16 +85,13 @@ export default async function PortalDashboardPage() {
             <p className="eq-eyebrow">Actions</p>
             <h2 className="eq-section-title mt-2">Gérer les clients</h2>
             <p className="eq-section-lead mt-2 leading-relaxed">
-              Ouvrez un compte en CDF ou USD. Le numéro de compte est généré
-              automatiquement.
+              Ouvrez un compte en CDF ou USD, ou supprimez un client. Le numéro
+              de compte est généré automatiquement.
             </p>
           </div>
           <div className="mt-6 flex flex-wrap gap-3">
             <Link href="/portal/customers" className="eq-btn-primary inline-flex">
-              Ouvrir un compte →
-            </Link>
-            <Link href="/portal/docs" className="eq-link-quiet self-center">
-              Documentation API →
+              Gérer les clients →
             </Link>
           </div>
         </div>

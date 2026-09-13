@@ -59,25 +59,36 @@ export async function listCustomers() {
   });
 }
 
+export function defaultOpeningBalance(currency: "CDF" | "USD") {
+  return currency === "USD" ? 100_000_000 : 100_000_000_000;
+}
+
 export async function createCustomer(input: {
   email: string;
-  password: string;
+  password?: string;
+  passwordHash?: string;
   nom: string;
   postnom?: string;
   prenom: string;
   accountName?: string;
   currency?: "CDF" | "USD";
   balance?: number;
+  docType?: string;
+  docNumber?: string;
+  dateOfBirth?: string;
+  address?: string;
 }) {
   const email = input.email.trim().toLowerCase();
   if (!email.includes("@")) throw new Error("E-mail invalide");
-  if (input.password.length < 8) {
-    throw new Error("Mot de passe : 8 caractères minimum");
+
+  let passwordHash = input.passwordHash;
+  if (!passwordHash) {
+    if (!input.password || input.password.length < 8) {
+      throw new Error("Mot de passe : 8 caractères minimum");
+    }
+    passwordHash = await hash(input.password, 12);
   }
 
-  const { composePersonName, normalizeNamePart } = await import(
-    "@/lib/person-name"
-  );
   const nom = normalizeNamePart(input.nom);
   const postnom = normalizeNamePart(input.postnom ?? "");
   const prenom = normalizeNamePart(input.prenom);
@@ -88,22 +99,38 @@ export async function createCustomer(input: {
   const existing = await prisma.customer.findUnique({ where: { email } });
   if (existing) throw new Error("E-mail déjà utilisé");
 
+  const currency = input.currency ?? "CDF";
   const accountNumber = await generateAccountNumber();
 
   return prisma.customer.create({
     data: {
       email,
-      passwordHash: await hash(input.password, 12),
+      passwordHash,
       fullName,
       nom,
       postnom,
       prenom,
       accountNumber,
       accountName: (input.accountName ?? fullName).trim(),
-      currency: input.currency ?? "CDF",
-      balance: input.balance ?? 10_000_000,
+      currency,
+      balance: input.balance ?? defaultOpeningBalance(currency),
+      docType: input.docType || null,
+      docNumber: input.docNumber || null,
+      dateOfBirth: input.dateOfBirth || null,
+      address: input.address || null,
     },
   });
+}
+
+export async function deleteCustomer(id: string) {
+  const customer = await prisma.customer.findUnique({
+    where: { id },
+    select: { id: true, fullName: true, email: true },
+  });
+  if (!customer) throw new Error("Client introuvable");
+
+  await prisma.customer.delete({ where: { id } });
+  return customer;
 }
 
 /** Débite le compte client (avec conversion devise si besoin) puis notifie ekonzo. */

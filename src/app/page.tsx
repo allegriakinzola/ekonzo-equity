@@ -19,6 +19,16 @@ export default function HomePage() {
 
       <div className="eq-reveal eq-reveal-delay-2 mt-10 grid gap-4 sm:grid-cols-2">
         <Link
+          href="/open-account"
+          className="eq-panel group transition hover:-translate-y-0.5 hover:border-[var(--equity-red)]/30"
+        >
+          <p className="eq-eyebrow">Clients</p>
+          <p className="eq-section-title mt-2">Ouvrir un compte</p>
+          <p className="eq-section-lead">
+            E-mail, code OTP, puis pièce d&apos;identité
+          </p>
+        </Link>
+        <Link
           href="/login"
           className="eq-panel group transition hover:-translate-y-0.5 hover:border-[var(--equity-red)]/30"
         >
@@ -26,6 +36,16 @@ export default function HomePage() {
           <p className="eq-section-title mt-2">Espace agents</p>
           <p className="eq-section-lead">
             Gérer les clients internet banking
+          </p>
+        </Link>
+        <Link
+          href="/account/login"
+          className="eq-panel group transition hover:-translate-y-0.5 hover:border-[var(--equity-red)]/30"
+        >
+          <p className="eq-eyebrow">Clients</p>
+          <p className="eq-section-title mt-2">Mon compte</p>
+          <p className="eq-section-lead">
+            Consulter le solde et les informations du compte
           </p>
         </Link>
         <div className="eq-panel border-dashed">
